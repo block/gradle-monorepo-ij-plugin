@@ -1,0 +1,8 @@
+.gradle
+**/out/
+.idea
+!.idea/externalDependencies.xml
+**.DS_Store
+build/
+.intellijPlatform/
+*.bak
