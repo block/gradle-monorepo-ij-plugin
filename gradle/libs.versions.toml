@@ -1,0 +1,8 @@
+[versions]
+kotlin = "2.0.21"
+
+[libraries]
+kotlinStdLib = { module = "org.jetbrains.kotlin:kotlin-stdlib" }
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

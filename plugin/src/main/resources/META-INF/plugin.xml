@@ -1,0 +1,11 @@
+<idea-plugin>
+  <id>xyz.block.gradle-monorepo</id>
+  <name>gradle-monorepo</name>
+  <description>Improves the developer experience working in a gradle monorepo project</description>
+  <vendor url="https://block.xyz/">Block</vendor>
+  <depends>com.intellij.modules.platform</depends>
+  <extensions defaultExtensionNs="com.intellij">
+    <directoryIndexExcludePolicy
+        implementation="xyz.block.tools.monorepo.idea.InactiveProjectExcludeDirPolicy" />
+  </extensions>
+</idea-plugin>
