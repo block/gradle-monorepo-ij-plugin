@@ -1,20 +1,19 @@
+name: Idea major version upgrade
 on:
   workflow_dispatch:
   schedule:
     - cron:  '0 0 * * *'
-name: Idea major version upgrade
 jobs:
   upgrade:
-    name: Check for updates
+    name: Check for idea version updates
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - run: ./bin/upgrade-major-versions
+      - run: ./scripts/upgrade-major-versions.sh
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
           branch: auto/idea-major-version-upgrade
-          labels: idea-upgrade
           delete-branch: true
           title: "[Automatic] Upgrade of the idea major versions"
