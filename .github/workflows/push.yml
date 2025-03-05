@@ -1,0 +1,49 @@
+name: Main
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '*.md'
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for manual run'
+        required: false
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gradle:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      # Free disk space to avoid running into "No space left on device" errors
+      # when downloading multiple versions of IntelliJ for plugin verification
+      - name: Maximize Build Space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: true
+
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+
+      - name: Setup java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v4
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Execute check
+        run: './gradlew check -s'
