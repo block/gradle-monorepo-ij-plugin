@@ -12,12 +12,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Generate Token
-        uses: tibdex/github-app-token@v1
-        id: generate-token
-        with:
-          app_id: ${{ secrets.APP_ID }}
-          private_key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: Check for changes # checks if there are changes since the last tag
         id: check-changes
         run: |
@@ -38,6 +32,6 @@ jobs:
       - uses: mathieudutour/github-tag-action@v5.6
         if: steps.check-changes.outputs.version != ''
         with:
-          github_token: ${{ steps.generate-token.outputs.token }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           custom_tag: '${{ steps.bump-semver.outputs.new_version }}'
           release_branches: 'main'
