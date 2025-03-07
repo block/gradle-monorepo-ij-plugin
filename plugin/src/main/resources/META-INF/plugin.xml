@@ -1,5 +1,6 @@
 <idea-plugin>
   <id>xyz.block.gradle-monorepo</id>
+  <version>PLUGIN_VERSION</version>
   <name>gradle-monorepo</name>
   <description>Improves the developer experience working in a gradle monorepo project</description>
   <vendor url="https://block.xyz/">Block</vendor>

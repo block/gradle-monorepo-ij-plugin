@@ -13,6 +13,8 @@ dependencies {
   }
 }
 
+version = System.getenv("IJ_PLUGIN_VERSION") ?: "0.1.0" // IJ_PLUGIN_VERSION env var available in CI
+
 val pluginName = "gradle-monorepo"
 val sinceIdeVersion = "233.15619.7" // corresponds to 2023.3.x versions
 val sinceBuildMajorVersion = sinceIdeVersion.substringBefore('.')
@@ -20,6 +22,7 @@ val untilIdeVersion = properties["IIC.release.version"] as String
 val untilBuildMajorVersion = untilIdeVersion.substringBefore('.')
 
 intellijPlatform {
+  version = version
   buildSearchableOptions = false
   projectName = project.name
   instrumentCode = false // We don't need to scan codebase for jetbrains annotations
@@ -50,15 +53,19 @@ intellijPlatform {
 }
 
 tasks {
-  publishPlugin {
-    enabled = false
-  }
-
   buildPlugin {
     archiveBaseName = pluginName
   }
 
   check {
     dependsOn("verifyPlugin")
+  }
+
+  patchPluginXml {
+    version = version
+  }
+
+  publishPlugin {
+    token.set(System.getenv("JETBRAINS_TOKEN")) // JETBRAINS_TOKEN env var available in CI
   }
 }
