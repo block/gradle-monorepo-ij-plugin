@@ -10,7 +10,9 @@ import java.io.InputStreamReader
 
 private val logger by lazy { Logger.getInstance("xyz.block.tools.monorepo.idea.ProjectExtensions") }
 
-fun Project.getFileContent(filePath: String): String? {
+fun Project.getFileContent(filePath: String): String? = getFile(filePath)?.loadText()
+
+fun Project.getFile(filePath: String): VirtualFile? {
   val rootDir = this.guessProjectDir()
   if (rootDir == null) {
     logger.warn("The project root directory is null - skipping")
@@ -18,10 +20,9 @@ fun Project.getFileContent(filePath: String): String? {
   }
   val file = rootDir.findFile(filePath)
   if (file == null) {
-    logger.warn("The file at $filePath is missing")
-    return null
+    logger.info("The file at $filePath is missing")
   }
-  return file.loadText()
+  return file
 }
 
 private fun VirtualFile.loadText(): String =

@@ -13,6 +13,11 @@ class InactiveProjectExcludeDirPolicy(private val project: Project?) : Directory
       return emptyArray()
     }
 
+    if (!project.getService(ConfigurationService::class.java).pluginEnabled) {
+      logger.info("The gradle-monorepo plugin is not enabled for the current project")
+      return emptyArray()
+    }
+
     val inactiveProjectDirs = project.getInactiveProjectDirs()
     return if (inactiveProjectDirs.isNotEmpty()) {
       logger.info("Excluding inactive project dirs: $inactiveProjectDirs")
