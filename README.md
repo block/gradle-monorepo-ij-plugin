@@ -9,7 +9,7 @@ This repository contains the code for the Block Gradle monorepo IntelliJ idea pl
 The plugin is disabled by default, and a `gradle-monorepo.properties` file located under the `.idea` directory with the following content, can be used to enable it for any project: 
 
 ```properties
-gradle-monorepo.enabled=true
+enabled=true
 ```
 
 Changes to these config require an IDE restart to take effect.

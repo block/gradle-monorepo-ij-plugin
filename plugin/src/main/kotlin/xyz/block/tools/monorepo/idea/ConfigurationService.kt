@@ -27,7 +27,7 @@ class ConfigurationService(private val project: Project) {
 
   private companion object {
     private const val CONFIG_FILE_PATH: String = ".idea/gradle-monorepo.properties"
-    private const val ENABLED_PROPERTY_NAME: String = "gradle-monorepo.enabled"
+    private const val ENABLED_PROPERTY_NAME: String = "enabled"
     private val logger = Logger.getInstance(ConfigurationService::class.java.name)
   }
 }
