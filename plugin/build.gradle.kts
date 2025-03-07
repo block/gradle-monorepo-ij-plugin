@@ -13,7 +13,7 @@ dependencies {
   }
 }
 
-version = project.properties["version"] ?: "0.1.0"
+version = System.getenv("IJ_PLUGIN_VERSION") ?: "0.1.0" // IJ_PLUGIN_VERSION env var available in CI
 
 val pluginName = "gradle-monorepo"
 val sinceIdeVersion = "233.15619.7" // corresponds to 2023.3.x versions
@@ -62,7 +62,7 @@ tasks {
   }
 
   patchPluginXml {
-    version = System.getenv("IJ_PLUGIN_VERSION") // IJ_PLUGIN_VERSION env var available in CI
+    version = version
   }
 
   publishPlugin {
