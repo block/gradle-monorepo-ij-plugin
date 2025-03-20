@@ -10,7 +10,7 @@ pluginManagement {
 }
 
 plugins {
-  id("org.jetbrains.intellij.platform.settings") version "2.3.0"
+  id("org.jetbrains.intellij.platform.settings") version "2.4.0"
 }
 
 dependencyResolutionManagement {
