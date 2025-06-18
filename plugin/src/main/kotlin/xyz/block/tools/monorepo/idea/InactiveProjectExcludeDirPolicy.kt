@@ -20,7 +20,7 @@ class InactiveProjectExcludeDirPolicy(private val project: Project?) : Directory
 
     val inactiveProjectDirs = project.getInactiveProjectDirs()
     val moduleDependencyTestDirs = project.getProjectDependencyTestDirs()
-    return if (inactiveProjectDirs.isNotEmpty() && moduleDependencyTestDirs.isNotEmpty()) {
+    return if (inactiveProjectDirs.isNotEmpty() || moduleDependencyTestDirs.isNotEmpty()) {
       logger.info("Excluding inactive project dirs: $inactiveProjectDirs")
       logger.info("Excluding project dependency test dirs: $moduleDependencyTestDirs")
       inactiveProjectDirs.plus(moduleDependencyTestDirs)
@@ -48,6 +48,11 @@ class InactiveProjectExcludeDirPolicy(private val project: Project?) : Directory
     }
 
     private fun Project.getProjectDependencyTestDirs(): List<String> {
+      if (!this.getService(ConfigurationService::class.java).excludeDepTestDirs) {
+        logger.info("The gradle-monorepo plugin is configured to NOT exclude dep test dirs")
+        return emptyList()
+      }
+
       val requestedModulesContent = getRequestedModulesContent()
       if (shouldSkipDirExclusions(requestedModulesContent)) {
         logger.info("Skipping exclude of test dirs as requested by user")
