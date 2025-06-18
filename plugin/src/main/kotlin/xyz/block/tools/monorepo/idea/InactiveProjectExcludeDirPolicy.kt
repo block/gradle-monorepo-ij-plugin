@@ -32,6 +32,11 @@ class InactiveProjectExcludeDirPolicy(private val project: Project?) : Directory
 
   companion object {
     private val logger = Logger.getInstance(InactiveProjectExcludeDirPolicy::class.java)
+    private val testDirs = listOf(
+      "src/test/java",
+      "src/test/kotlin",
+      "src/test/resources"
+    )
 
     private fun Project.getInactiveProjectDirs(): List<String> {
       val requestedModulesContent = getRequestedModulesContent()
@@ -68,7 +73,7 @@ class InactiveProjectExcludeDirPolicy(private val project: Project?) : Directory
         ?.split("\n")
         ?.filter { it.trim().isNotEmpty() }
         ?.map { it.replace(':', '/').trim('/') }
-        ?.map { "$it/src/test" }
+        ?.flatMap { projectDir -> testDirs.map { testDir -> "$projectDir/$testDir" } }
         ?: emptyList()
     }
 
