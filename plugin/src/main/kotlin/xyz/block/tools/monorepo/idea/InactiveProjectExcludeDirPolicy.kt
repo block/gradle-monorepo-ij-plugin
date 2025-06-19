@@ -19,9 +19,12 @@ class InactiveProjectExcludeDirPolicy(private val project: Project?) : Directory
     }
 
     val inactiveProjectDirs = project.getInactiveProjectDirs()
-    return if (inactiveProjectDirs.isNotEmpty()) {
+    val moduleDependencyTestDirs = project.getProjectDependencyTestDirs()
+    return if (inactiveProjectDirs.isNotEmpty() || moduleDependencyTestDirs.isNotEmpty()) {
       logger.info("Excluding inactive project dirs: $inactiveProjectDirs")
-      inactiveProjectDirs.map { Paths.get(project.basePath, it) }.map { "file://$it" }.toSet().toTypedArray()
+      logger.info("Excluding project dependency test dirs: $moduleDependencyTestDirs")
+      inactiveProjectDirs.plus(moduleDependencyTestDirs)
+        .map { Paths.get(project.basePath, it) }.map { "file://$it" }.toSet().toTypedArray()
     } else {
       emptyArray()
     }
@@ -29,11 +32,15 @@ class InactiveProjectExcludeDirPolicy(private val project: Project?) : Directory
 
   companion object {
     private val logger = Logger.getInstance(InactiveProjectExcludeDirPolicy::class.java)
+    private val testDirs = listOf(
+      "src/test/java",
+      "src/test/kotlin",
+      "src/test/resources"
+    )
 
     private fun Project.getInactiveProjectDirs(): List<String> {
-      val requestedModulesContent = this.getFileContent("requested-modules.txt") ?: return emptyList()
-      val skipDirExclusions = requestedModulesContent.split("\n").any { it.trim() == "__SKIP_DIR_EXCLUSION" }
-      if (skipDirExclusions) {
+      val requestedModulesContent = getRequestedModulesContent()
+      if (shouldSkipDirExclusions(requestedModulesContent)) {
         logger.info("Skipping exclude of inactive project dirs as requested by user")
         return emptyList()
       }
@@ -44,5 +51,36 @@ class InactiveProjectExcludeDirPolicy(private val project: Project?) : Directory
         .filter { it.trim().isNotEmpty() }
         .map { it.replace(':', '/').trim('/') }
     }
+
+    private fun Project.getProjectDependencyTestDirs(): List<String> {
+      if (!this.getService(ConfigurationService::class.java).excludeDepTestDirs) {
+        logger.info("The gradle-monorepo plugin is configured to NOT exclude dep test dirs")
+        return emptyList()
+      }
+
+      val requestedModulesContent = getRequestedModulesContent()
+      if (shouldSkipDirExclusions(requestedModulesContent)) {
+        logger.info("Skipping exclude of test dirs as requested by user")
+        return emptyList()
+      }
+
+      if (requestedModulesContent.contains("__ALL")) {
+        logger.info("Skipping exclude of test dirs as all Projects are requested.")
+        return emptyList()
+      }
+
+      return this.getFileContent("build/settings_module_dependencies.txt")
+        ?.split("\n")
+        ?.filter { it.trim().isNotEmpty() }
+        ?.map { it.replace(':', '/').trim('/') }
+        ?.flatMap { projectDir -> testDirs.map { testDir -> "$projectDir/$testDir" } }
+        ?: emptyList()
+    }
+
+    private fun Project.getRequestedModulesContent(): List<String> =
+      this.getFileContent("requested-modules.txt")?.split("\n") ?: emptyList()
+
+    private fun shouldSkipDirExclusions(requestedModulesContent: List<String>): Boolean =
+      requestedModulesContent.any { it.trim() == "__SKIP_DIR_EXCLUSION" }
   }
 }
