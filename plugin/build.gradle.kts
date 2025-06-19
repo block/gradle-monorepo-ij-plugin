@@ -16,8 +16,8 @@ dependencies {
 version = System.getenv("IJ_PLUGIN_VERSION") ?: "0.1.0" // IJ_PLUGIN_VERSION env var available in CI
 
 val pluginName = "gradle-monorepo"
-val sinceIdeVersion = "233.15619.7" // corresponds to 2023.3.x versions
-val sinceBuildMajorVersion = sinceIdeVersion.substringBefore('.')
+val sinceBuildMajorVersion = "233" // corresponds to 2023.3.x versions
+val sinceIdeVersionForVerification = "241.14494.240" // corresponds to the 2024.1 version
 val untilIdeVersion = properties["IIC.release.version"] as String
 val untilBuildMajorVersion = untilIdeVersion.substringBefore('.')
 
@@ -45,7 +45,7 @@ intellijPlatform {
       recommended()
       select {
         types = listOf(IntelliJPlatformType.IntellijIdeaCommunity, IntelliJPlatformType.IntellijIdeaUltimate)
-        sinceBuild = sinceIdeVersion
+        sinceBuild = sinceIdeVersionForVerification
         untilBuild = untilIdeVersion
       }
     }
