@@ -21,17 +21,25 @@ class ConfigurationService(private val project: Project) {
     properties
   }
 
-  val pluginEnabled by lazy {
+  val pluginEnabled: Boolean by lazy {
     configProperties.getProperty(ENABLED_PROPERTY_NAME)?.toBoolean() == true
   }
 
-  val excludeDepTestDirs by lazy {
+  val excludeDepTestDirs: Boolean by lazy {
     configProperties.getProperty(EXCLUDE_DEP_TEST_DIRS_PROPERTY_NAME)?.toBoolean() == true
+  }
+
+  val extraDirsToExclude: Set<String> by lazy {
+    configProperties.getProperty(EXTRA_DIRS_TO_EXCLUDE_PROPERTY_NAME)?.split(",")
+      ?.map { it.trim() }
+      ?.filter { it.isNotEmpty() }
+      ?.toSet() ?: emptySet()
   }
 
   private companion object {
     private const val CONFIG_FILE_PATH: String = ".idea/gradle-monorepo.properties"
     private const val ENABLED_PROPERTY_NAME: String = "enabled"
     private const val EXCLUDE_DEP_TEST_DIRS_PROPERTY_NAME: String = "exclude-dep-test-dirs"
+    private const val EXTRA_DIRS_TO_EXCLUDE_PROPERTY_NAME: String = "extra-dirs-to-exclude"
   }
 }

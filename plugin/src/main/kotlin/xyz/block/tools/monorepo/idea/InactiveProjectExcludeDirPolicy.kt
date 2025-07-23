@@ -20,10 +20,16 @@ class InactiveProjectExcludeDirPolicy(private val project: Project?) : Directory
 
     val inactiveProjectDirs = project.getInactiveProjectDirs()
     val moduleDependencyTestDirs = project.getProjectDependencyTestDirs()
-    return if (inactiveProjectDirs.isNotEmpty() || moduleDependencyTestDirs.isNotEmpty()) {
+    val extraDirsToExclude = project.getService(ConfigurationService::class.java).extraDirsToExclude
+    return if (
+      inactiveProjectDirs.isNotEmpty() ||
+      moduleDependencyTestDirs.isNotEmpty() ||
+      extraDirsToExclude.isNotEmpty()
+    ) {
       logger.info("Excluding inactive project dirs: $inactiveProjectDirs")
       logger.info("Excluding project dependency test dirs: $moduleDependencyTestDirs")
-      inactiveProjectDirs.plus(moduleDependencyTestDirs)
+      logger.info("Excluding configured extra directories: $extraDirsToExclude")
+      inactiveProjectDirs.plus(moduleDependencyTestDirs).plus(extraDirsToExclude)
         .map { Paths.get(project.basePath, it) }.map { "file://$it" }.toSet().toTypedArray()
     } else {
       emptyArray()
