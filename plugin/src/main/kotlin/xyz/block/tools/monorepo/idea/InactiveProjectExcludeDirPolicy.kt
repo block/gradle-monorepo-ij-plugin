@@ -51,7 +51,7 @@ class InactiveProjectExcludeDirPolicy(private val project: Project?) : Directory
         return emptyList()
       }
 
-      val inactiveProjectsContent = this.getFileContent("settings_inactive_modules.txt") ?: return emptyList()
+      val inactiveProjectsContent = this.getFileContent(Files.INACTIVE_MODULES) ?: return emptyList()
       return inactiveProjectsContent
         .split("\n")
         .filter { it.trim().isNotEmpty() }
@@ -75,7 +75,7 @@ class InactiveProjectExcludeDirPolicy(private val project: Project?) : Directory
         return emptyList()
       }
 
-      return this.getFileContent("build/settings_module_dependencies.txt")
+      return this.getFileContent(Files.MODULE_DEPENDENCIES)
         ?.split("\n")
         ?.filter { it.trim().isNotEmpty() }
         ?.map { it.replace(':', '/').trim('/') }
@@ -84,7 +84,7 @@ class InactiveProjectExcludeDirPolicy(private val project: Project?) : Directory
     }
 
     private fun Project.getRequestedModulesContent(): List<String> =
-      this.getFileContent("requested-modules.txt")?.split("\n") ?: emptyList()
+      this.getFileContent(Files.REQUESTED_MODULES)?.split("\n") ?: emptyList()
 
     private fun shouldSkipDirExclusions(requestedModulesContent: List<String>): Boolean =
       requestedModulesContent.any { it.trim() == "__SKIP_DIR_EXCLUSION" }

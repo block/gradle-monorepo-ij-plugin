@@ -9,4 +9,10 @@
     <directoryIndexExcludePolicy
         implementation="xyz.block.tools.monorepo.idea.InactiveProjectExcludeDirPolicy" />
   </extensions>
+<!--  <applicationListeners>-->
+<!--    &lt;!&ndash;<listener class="xyz.block.tools.monorepo.idea.FilesUpdateListener" topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>&ndash;&gt;-->
+<!--  </applicationListeners>-->
+  <projectListeners>
+    <listener class="xyz.block.tools.monorepo.idea.FilesUpdateListener" topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
+  </projectListeners>
 </idea-plugin>
