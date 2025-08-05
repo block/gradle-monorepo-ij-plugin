@@ -5,8 +5,12 @@
   <description>Improves the developer experience working in a gradle monorepo project</description>
   <vendor url="https://block.xyz/">Block</vendor>
   <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.gradle</depends>
   <extensions defaultExtensionNs="com.intellij">
     <directoryIndexExcludePolicy
         implementation="xyz.block.tools.monorepo.idea.InactiveProjectExcludeDirPolicy" />
+  </extensions>
+  <extensions defaultExtensionNs="org.jetbrains.plugins.gradle">
+    <projectResolve implementation="xyz.block.tools.monorepo.idea.RefreshProjectViewExtension" />
   </extensions>
 </idea-plugin>

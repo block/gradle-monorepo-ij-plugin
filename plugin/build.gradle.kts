@@ -10,6 +10,7 @@ dependencies {
   intellijPlatform {
     intellijIdeaUltimate("2024.3.2")
     pluginVerifier("1.381")
+    bundledPlugin("com.intellij.gradle")
   }
 }
 
@@ -17,7 +18,7 @@ version = System.getenv("IJ_PLUGIN_VERSION") ?: "0.1.0" // IJ_PLUGIN_VERSION env
 
 val pluginName = "gradle-monorepo"
 val sinceBuildMajorVersion = "233" // corresponds to 2023.3.x versions
-val sinceIdeVersionForVerification = "241.14494.240" // corresponds to the 2024.1 version
+val sinceIdeVersionForVerification = "243.21565.193" // corresponds to the 2024.3 version
 val untilIdeVersion = properties["IIC.release.version"] as String
 val untilBuildMajorVersion = untilIdeVersion.substringBefore('.')
 
