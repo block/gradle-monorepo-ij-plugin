@@ -6,3 +6,4 @@
 build/
 .intellijPlatform/
 *.bak
+.kotlin

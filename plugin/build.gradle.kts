@@ -10,6 +10,7 @@ dependencies {
   intellijPlatform {
     intellijIdeaUltimate("2024.3.2")
     pluginVerifier("1.381")
+    bundledPlugin("com.intellij.gradle")
   }
 }
 
