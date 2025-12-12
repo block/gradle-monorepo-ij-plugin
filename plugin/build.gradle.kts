@@ -20,7 +20,6 @@ val pluginName = "gradle-monorepo"
 val sinceBuildMajorVersion = "241" // corresponds to 2024.1.x versions
 val sinceIdeVersionForVerification = "251.23774.435" // corresponds to the 2025.1 version
 val untilIdeVersion = properties["IIU.release.version"] as String
-val untilBuildMajorVersion = untilIdeVersion.substringBefore('.')
 
 intellijPlatform {
   version = version
@@ -38,7 +37,6 @@ intellijPlatform {
     }
     ideaVersion {
       sinceBuild = sinceBuildMajorVersion
-      untilBuild = "$untilBuildMajorVersion.*"
     }
   }
   pluginVerification {
