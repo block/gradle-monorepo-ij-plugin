@@ -37,6 +37,7 @@ intellijPlatform {
     }
     ideaVersion {
       sinceBuild = sinceBuildMajorVersion
+      untilBuild = untilIdeVersion
     }
   }
   pluginVerification {
